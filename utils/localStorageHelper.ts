@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const STORAGE_KEY = 'UserInformation'; // Bạn có thể thay đổi key này tùy theo nhu cầu
+const STORAGE_KEY = 'UserInformation';
 
 export const setLocalStorage = async (
   key: string,
