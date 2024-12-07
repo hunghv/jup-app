@@ -42,17 +42,15 @@ const LoginScreen = () => {
   }, [isLoggedIn]);
 
   const handleLogin = async () => {
-    // const response = await signInWithEmailAndPassword(auth, email, password);
-    // const accessToken = await response.user.getIdToken();
-
-    // await setLocalStorage('accessToken', accessToken);
-    // dispatch(login());
+    const response = await signInWithEmailAndPassword(auth, email, password);
+    const accessToken = await response.user.getIdToken();
+    await setLocalStorage('accessToken', accessToken);
+    dispatch(login());
   };
 
-  // if (trigger) {
-  //   console.log(user);
-  //   alert(user.fullname);
-  // }
+  if (trigger && user?.fullname) {
+    alert(user.fullname);
+  }
 
   return (
     <View style={styles.container}>
@@ -71,7 +69,7 @@ const LoginScreen = () => {
         secureTextEntry
       />
       {error && <Text style={styles.error}>{error}</Text>}
-      {/* {isLoggedIn && <Text style={styles.error}>{isLoggedIn}</Text>} */}
+      {user && <Text style={styles.error}>{user.fullname}</Text>}
       <Button title="Login" onPress={handleLogin} />
       {loading && <ActivityIndicator size="large" style={styles.loader} />}
     </View>

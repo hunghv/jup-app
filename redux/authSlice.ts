@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { login } from '../services/user-service';
+import { setLocalStorage } from 'utils/localStorageHelper';
 
 interface UserState {
   loading: boolean;
@@ -29,10 +30,10 @@ const authSlice = createSlice({
         state.loading = false;
         state.isLoggedIn = true;
         state.user = action.payload;
+        setLocalStorage('UserInformation', state.user);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
         state.error = 'Login đã sảy ra lỗi!';
       });
   },
