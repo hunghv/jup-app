@@ -1,108 +1,81 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from 'redux/store';
-import { login } from 'services/user-service';
-import { auth } from './firebaseConfig';
-import {
-  getLocalStorage,
-  getUserInformation,
-  setLocalStorage,
-} from '../../utils/localStorageHelper';
+import React from 'react';
+import { Box, Button, Input, VStack, Text, HStack, Icon, Pressable, Image } from 'native-base';
+import { Ionicons } from '@expo/vector-icons';
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { loading, error } = useSelector((state: any) => state.auth);
-  const [trigger, setTrigger] = useState(false);
-  const dispatch: AppDispatch = useDispatch();
-
-  const { isLoggedIn, user } = useSelector((state: RootState) => state.auth);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const user = await getUserInformation();
-        if (user) {
-          setTrigger(true);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
-  }, [isLoggedIn]);
-
-  const handleLogin = async () => {
-    const response = await signInWithEmailAndPassword(auth, email, password);
-    const accessToken = await response.user.getIdToken();
-    await setLocalStorage('accessToken', accessToken);
-    dispatch(login());
-  };
-
-  if (trigger && user?.fullname) {
-    alert(user.fullname);
-  }
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
+    <Box flex={1} bg="#F5F5F9" alignItems="center" justifyContent="center" safeArea>
+      {/* Logo */}
+      <Image
+        source={{ uri: 'https://your-logo-url-here.com' }} // Thay URL của logo vào đây
+        alt="Logo"
+        size="xl"
+        mb={5}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      {error && <Text style={styles.error}>{error}</Text>}
-      {user && <Text style={styles.error}>{user.fullname}</Text>}
-      <Button title="Login" onPress={handleLogin} />
-      {loading && <ActivityIndicator size="large" style={styles.loader} />}
-    </View>
+
+      {/* Form */}
+      <VStack space={4} width="80%">
+        {/* Số điện thoại */}
+        <Input
+          placeholder="Số điện thoại tài khoản"
+          variant="outline"
+          InputLeftElement={
+            <Icon as={<Ionicons name="call-outline" />} size={5} ml="2" color="muted.400" />
+          }
+        />
+        {/* Mật khẩu */}
+        <Input
+          placeholder="Mật khẩu"
+          variant="outline"
+          type="password"
+          InputLeftElement={
+            <Icon as={<Ionicons name="lock-closed-outline" />} size={5} ml="2" color="muted.400" />
+          }
+        />
+
+        {/* Nút Đăng nhập */}
+        <Button bg="#FF5E5E" _pressed={{ bg: '#E54B4B' }}>
+          Đăng nhập
+        </Button>
+
+        {/* Nút Facebook */}
+        <Button bg="#3B5998" _pressed={{ bg: '#2E4676' }}>
+          Facebook
+        </Button>
+      </VStack>
+
+      {/* Quên mật khẩu và Tra cứu kết quả */}
+      <HStack justifyContent="space-between" width="80%" mt={4}>
+        <Pressable>
+          <Text color="gray.500" fontSize="sm">
+            Quên mật khẩu?
+          </Text>
+        </Pressable>
+        <Pressable>
+          <Text color="gray.500" fontSize="sm">
+            Tra cứu kết quả
+          </Text>
+        </Pressable>
+      </HStack>
+
+      {/* Nút Tài khoản mới */}
+      <Button
+        bg="#FF5E5E"
+        _pressed={{ bg: '#E54B4B' }}
+        mt={6}
+        width="80%"
+      >
+        Tài khoản mới
+      </Button>
+
+      {/* Thông tin liên hệ */}
+      <HStack mt={10} justifyContent="center">
+        <Text color="gray.400" fontSize="xs">
+          Hotline liên hệ: 098611263 | Website: ups.edu.vn
+        </Text>
+      </HStack>
+    </Box>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
-  },
-  error: {
-    color: 'red',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  loader: {
-    marginTop: 10,
-  },
-});
 
 export default LoginScreen;

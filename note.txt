@@ -1,2 +1,2 @@
-npx create-expo-app material-ui-in-react-native --template expo-template-blank-typescript
+npx create-expo-app jup-mobile --template expo-template-blank-typescript
 cd material-ui-in-react-native
